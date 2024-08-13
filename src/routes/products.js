@@ -1,5 +1,6 @@
 import express from 'express';
 import Product from '../models/product.model.js';
+import { authorizeRole } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
@@ -32,6 +33,19 @@ router.get('/', async (req, res) => {
     } catch (error) {
         res.status(500).json({ status: 'error', message: error.message });
     }
+});
+
+// Añadir, actualizar y eliminar productos solo puede ser realizado por un administrador
+router.post('/', authorizeRole(['admin']), async (req, res) => {
+    // Lógica para añadir un producto
+});
+
+router.put('/:id', authorizeRole(['admin']), async (req, res) => {
+    // Lógica para actualizar un producto
+});
+
+router.delete('/:id', authorizeRole(['admin']), async (req, res) => {
+    // Lógica para eliminar un producto
 });
 
 export default router;

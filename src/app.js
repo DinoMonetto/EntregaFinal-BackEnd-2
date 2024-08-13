@@ -15,7 +15,9 @@ import ProductManager from './managers/product.manager.js';
 import passport from './config/passport.js';
 import sessionRoutes from './routes/sessions.js';
 import cookieParser from 'cookie-parser';
-
+import productRoutes from './routes/product.js';
+import cartRoutes from './routes/cart.js';
+import ticketRoutes from './routes/ticket.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -40,6 +42,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, 'public')));
 app.use(cookieParser());
 app.use(passport.initialize());
+app.use('/api/products', productRoutes);
+app.use('/api/carts', cartRoutes);
+app.use('/api/tickets', ticketRoutes);
 
 // Configurar Handlebars
 app.engine('handlebars', exphbs({
