@@ -1,36 +1,25 @@
-import Cart from '../models/cart.model.js';
-import Product from '../models/product.model.js';
+// src/controllers/cart.controller.js
+import CartRepository from '../repositories/cart.repository.js';
 
 export const addProductToCart = async (req, res) => {
   try {
     const { cid, pid } = req.params;
-    const cart = await Cart.findById(cid);
-    if (!cart) return res.status(404).send('Carrito no encontrado');
-    
-    const product = await Product.findById(pid);
-    if (!product) return res.status(404).send('Producto no encontrado');
-
-    cart.products.push({ product: pid, quantity: 1 });
-    await cart.save();
+    await CartRepository.addProductToCart(cid, pid);
     res.status(200).send('Producto agregado al carrito');
   } catch (error) {
-    console.error('Error al agregar producto al carrito:', error);
-    res.status(500).send('Error interno');
+    console.error('Error al agregar producto al carrito:', error.message);
+    res.status(500).send(error.message || 'Error interno');
   }
 };
 
 export const deleteProductFromCart = async (req, res) => {
   try {
     const { cid, pid } = req.params;
-    const cart = await Cart.findById(cid);
-    if (!cart) return res.status(404).send('Carrito no encontrado');
-
-    cart.products = cart.products.filter(p => p.product.toString() !== pid);
-    await cart.save();
+    await CartRepository.deleteProductFromCart(cid, pid);
     res.status(200).send('Producto eliminado del carrito');
   } catch (error) {
-    console.error('Error al eliminar producto del carrito:', error);
-    res.status(500).send('Error interno');
+    console.error('Error al eliminar producto del carrito:', error.message);
+    res.status(500).send(error.message || 'Error interno');
   }
 };
 
@@ -38,16 +27,11 @@ export const updateCart = async (req, res) => {
   try {
     const { cid } = req.params;
     const { products } = req.body;
-
-    const cart = await Cart.findById(cid);
-    if (!cart) return res.status(404).send('Carrito no encontrado');
-
-    cart.products = products;
-    await cart.save();
+    await CartRepository.updateCart(cid, products);
     res.status(200).send('Carrito actualizado');
   } catch (error) {
-    console.error('Error al actualizar carrito:', error);
-    res.status(500).send('Error interno');
+    console.error('Error al actualizar carrito:', error.message);
+    res.status(500).send(error.message || 'Error interno');
   }
 };
 
@@ -55,50 +39,32 @@ export const updateProductQuantity = async (req, res) => {
   try {
     const { cid, pid } = req.params;
     const { quantity } = req.body;
-
-    const cart = await Cart.findById(cid);
-    if (!cart) return res.status(404).send('Carrito no encontrado');
-
-    const product = cart.products.find(p => p.product.toString() === pid);
-    if (product) {
-      product.quantity = quantity;
-      await cart.save();
-      res.status(200).send('Cantidad de producto actualizada');
-    } else {
-      res.status(404).send('Producto no encontrado en el carrito');
-    }
+    await CartRepository.updateProductQuantity(cid, pid, quantity);
+    res.status(200).send('Cantidad de producto actualizada');
   } catch (error) {
-    console.error('Error al actualizar cantidad de producto:', error);
-    res.status(500).send('Error interno');
+    console.error('Error al actualizar cantidad de producto:', error.message);
+    res.status(500).send(error.message || 'Error interno');
   }
 };
 
 export const deleteAllProductsFromCart = async (req, res) => {
   try {
     const { cid } = req.params;
-
-    const cart = await Cart.findById(cid);
-    if (!cart) return res.status(404).send('Carrito no encontrado');
-
-    cart.products = [];
-    await cart.save();
+    await CartRepository.deleteAllProductsFromCart(cid);
     res.status(200).send('Todos los productos eliminados del carrito');
   } catch (error) {
-    console.error('Error al eliminar todos los productos del carrito:', error);
-    res.status(500).send('Error interno');
+    console.error('Error al eliminar todos los productos del carrito:', error.message);
+    res.status(500).send(error.message || 'Error interno');
   }
 };
 
 export const getCartWithProducts = async (req, res) => {
   try {
     const { cid } = req.params;
-
-    const cart = await Cart.findById(cid).populate('products.product');
-    if (!cart) return res.status(404).send('Carrito no encontrado');
-
+    const cart = await CartRepository.getCartWithProducts(cid);
     res.status(200).json(cart);
   } catch (error) {
-    console.error('Error al obtener carrito con productos:', error);
-    res.status(500).send('Error interno');
+    console.error('Error al obtener carrito con productos:', error.message);
+    res.status(500).send(error.message || 'Error interno');
   }
 };
