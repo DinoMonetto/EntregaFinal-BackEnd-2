@@ -4,7 +4,7 @@ import Cart from '../models/cart.model.js';
 export const createTicket = async (req, res) => {
     try {
         const { cartId } = req.params;
-        const userId = req.user._id;  // Suponiendo que el ID del usuario está en req.user
+        const userId = req.user._id;  
         const cart = await Cart.findById(cartId).populate('products.productId');
 
         if (!cart) {

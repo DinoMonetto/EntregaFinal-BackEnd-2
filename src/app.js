@@ -14,10 +14,8 @@ import userRouter from './routes/users.js';
 import ProductManager from './managers/product.manager.js';
 import passport from './config/passport.js';
 import sessionRoutes from './routes/sessions.js';
+import ticketRoutes from './routes/tickets.js'; 
 import cookieParser from 'cookie-parser';
-import productRoutes from './routes/product.js';
-import cartRoutes from './routes/cart.js';
-import ticketRoutes from './routes/ticket.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -42,9 +40,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, 'public')));
 app.use(cookieParser());
 app.use(passport.initialize());
-app.use('/api/products', productRoutes);
-app.use('/api/carts', cartRoutes);
-app.use('/api/tickets', ticketRoutes);
+
+// Rutas
+app.use('/api/products', productRouter); // Utiliza productRouter aquí
+app.use('/api/carts', cartRouter);
+app.use('/api/users', userRouter);
+app.use('/api/sessions', sessionRoutes);
+app.use('/api/tickets', ticketRoutes); // Añade ticketRoutes aquí
 
 // Configurar Handlebars
 app.engine('handlebars', exphbs({
@@ -57,12 +59,6 @@ app.engine('handlebars', exphbs({
 }));
 app.set('view engine', 'handlebars');
 app.set('views', join(__dirname, 'views'));
-
-// Rutas
-app.use('/api/products', productRouter);
-app.use('/api/carts', cartRouter);
-app.use('/api/users', userRouter);
-app.use('/api/sessions', sessionRoutes);
 
 // Página de inicio
 app.get('/', async (req, res) => {
