@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const { Schema, model } = mongoose;
 
-// Definimos el esquema para el ticket
+// esquema del ticket
 const ticketSchema = new Schema({
     cartId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -24,7 +24,6 @@ const ticketSchema = new Schema({
     }
 });
 
-// Creamos el modelo a partir del esquema
 const Ticket = model('Ticket', ticketSchema);
 
 export default Ticket;
