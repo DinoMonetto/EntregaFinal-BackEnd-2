@@ -1,9 +1,10 @@
+// src/models/cart.model.js
 import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
 const cartSchema = new Schema({
-  items: [
+  products: [ 
     {
       productId: {
         type: Schema.Types.ObjectId,
@@ -13,7 +14,7 @@ const cartSchema = new Schema({
       quantity: {
         type: Number,
         required: true,
-        default: 1, // Se puede ajustar según tus necesidades
+        default: 1,
       },
     },
   ],

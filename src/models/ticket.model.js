@@ -2,16 +2,16 @@ import mongoose from 'mongoose';
 
 const { Schema, model } = mongoose;
 
-// esquema del ticket
+
 const ticketSchema = new Schema({
     cartId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Cart', // Referencia al carrito relacionado
+        ref: 'Cart',
         required: true
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // Referencia al usuario que realizó la compra
+        ref: 'User',
         required: true
     },
     totalAmount: {

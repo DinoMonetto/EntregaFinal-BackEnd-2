@@ -26,7 +26,7 @@ passport.use(new LocalStrategy({
 // Configuración de la estrategia JWT
 const opts = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWT_SECRET // Utiliza la variable de entorno correctamente
+    secretOrKey: process.env.JWT_SECRET 
 };
 
 passport.use(new JwtStrategy(opts, async (jwt_payload, done) => {
@@ -54,7 +54,7 @@ const cookieExtractor = (req) => {
 // Configuración de la estrategia JWT con cookies
 passport.use('jwt-cookie', new JwtStrategy({
     jwtFromRequest: cookieExtractor,
-    secretOrKey: process.env.JWT_SECRET // Utiliza la variable de entorno correctamente
+    secretOrKey: process.env.JWT_SECRET 
 }, async (jwt_payload, done) => {
     try {
         const user = await User.findById(jwt_payload.id);

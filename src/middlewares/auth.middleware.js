@@ -29,12 +29,10 @@
 
 export const authorizeRole = (roles) => {
     return (req, res, next) => {
-        // Permitir siempre el acceso, ignorando roles
         next();
     };
 };
 
 export const ensureAuthenticated = (req, res, next) => {
-    // Permitir siempre el acceso, ignorando autenticación
     next();
 };

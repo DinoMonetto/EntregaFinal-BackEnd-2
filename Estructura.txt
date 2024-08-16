@@ -1,9 +1,21 @@
 EntregaFinal-BackEnd/
 ├── node_modules/
 ├── src/
+│   ├── config/
+│   │   └── passport.js
 │   ├── controllers/
 │   │   ├── cartController.js
+│   │   ├── ticketController.js
+│   │   ├── viewController.js
 │   │   └── productController.js
+│   ├── dao/
+│   │   ├── cart.dao.js
+│   │   └── product.dao.js
+│   ├── dto/
+│   │   ├── cart.dto.js
+│   │   └── product.dto.js
+│   ├── helpers/
+│   │   └── pagination.js
 │   ├── models/
 │   │   ├── carts.model.js
 │   │   ├── user.model.js
@@ -13,8 +25,13 @@ EntregaFinal-BackEnd/
 │   │   ├── products.js
 │   │   ├── users.js
 │   │   ├── sessions.js
+│   │   ├── tickets.js
 │   │   └── views.js
+│   ├── repositories/
+│   │   ├── cart.repository.js
+│   │   └── product.repository.js
 │   ├── middlewares/
+│   │   ├── auth.middleware.js
 │   │   ├── errorHandler.js
 │   │   └── productValidator.js
 │   ├── managers/

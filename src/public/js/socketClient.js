@@ -15,7 +15,7 @@ socket.on('productAdded', (product) => {
     // Añadir evento al nuevo botón
     productItem.querySelector('.add-to-cart').addEventListener('click', async (event) => {
         const productId = event.target.dataset.productId;
-        const userId = 'id_del_usuario'; // Reemplaza con el ID del usuario autenticado
+        const userId = 'id_del_usuario'; 
         const response = await fetch(`/api/carts/${userId}/add`, {
             method: 'POST',
             headers: {

@@ -12,11 +12,9 @@ import productRouter from './routes/products.js';
 import cartRouter from './routes/carts.js';
 import userRouter from './routes/users.js';
 import ProductManager from './managers/product.manager.js';
-import passport from './config/passport.js';
 import sessionRoutes from './routes/sessions.js';
 import ticketRoutes from './routes/tickets.js'; 
 import cookieParser from 'cookie-parser';
-
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -26,7 +24,7 @@ const server = createServer(app);
 const io = new Server(server);
 
 // Conectar a MongoDB
-const mongoUri = process.env.MONGO_URI || 'mongodb+srv://dinolmonetto:123456dD.@monetto.iz9zzbq.mongodb.net/?retryWrites=true&w=majority&appName=Monetto';
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/monetto';
 mongoose.connect(mongoUri).then(() => {
   console.log('Conectado a MongoDB');
 }).catch((error) => {
@@ -39,14 +37,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(join(__dirname, 'public')));
 app.use(cookieParser());
-app.use(passport.initialize());
 
 // Rutas
-app.use('/api/products', productRouter); // Utiliza productRouter aquí
+app.use('/api/products', productRouter); 
 app.use('/api/carts', cartRouter);
 app.use('/api/users', userRouter);
 app.use('/api/sessions', sessionRoutes);
-app.use('/api/tickets', ticketRoutes); // Añade ticketRoutes aquí
+app.use('/api/tickets', ticketRoutes); 
 
 // Configurar Handlebars
 app.engine('handlebars', exphbs({

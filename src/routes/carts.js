@@ -1,32 +1,46 @@
 import express from 'express';
-import Cart from '../models/cart.model.js';
-import Product from '../models/product.model.js';
-import { addProductToCart, deleteProductFromCart, updateCart, updateProductQuantity, deleteAllProductsFromCart, getCartWithProducts } from '../controllers/cartController.js';
-import { authorizeRole } from '../middlewares/auth.middleware.js';
+import { 
+    addProductToCart, 
+    deleteProductFromCart, 
+    updateCart, 
+    updateProductQuantity, 
+    deleteAllProductsFromCart, 
+    getCartWithProducts, 
+    createCart 
+} from '../controllers/cartController.js';
 
 const router = express.Router();
 
-// Añadir producto al carrito (solo usuarios)
-router.post('/:cid/products/:pid', authorizeRole(['user']), addProductToCart);
+// Crear el carrito
+router.post('/', createCart);
 
-// Eliminar producto del carrito (solo usuarios)
-router.delete('/:cid/products/:pid', authorizeRole(['user']), deleteProductFromCart);
+// Añadir producto al carrito
+router.post('/:cid/products/:pid', addProductToCart);
 
-// Actualizar carrito con un arreglo de productos (solo usuarios)
-router.put('/:cid', authorizeRole(['user']), updateCart);
+// Eliminar producto del carrito
+router.delete('/:cid/products/:pid', deleteProductFromCart);
 
-// Actualizar cantidad de un producto en el carrito (solo usuarios)
-router.put('/:cid/products/:pid', authorizeRole(['user']), updateProductQuantity);
+// Actualizar carrito con un arreglo de productos
+router.put('/:cid', updateCart);
 
-// Eliminar todos los productos del carrito (solo usuarios)
-router.delete('/:cid', authorizeRole(['user']), deleteAllProductsFromCart);
+// Actualizar cantidad de un producto en el carrito
+router.put('/:cid/products/:pid', updateProductQuantity);
 
-// Obtener carrito con productos completos (populate) (solo usuarios)
-router.get('/:cid', authorizeRole(['user']), getCartWithProducts);
+// Eliminar todos los productos del carrito
+router.delete('/:cid', deleteAllProductsFromCart);
 
-// Listado de carritos (solo usuarios)
-router.get('/', authorizeRole(['user']), (req, res) => {
-    res.send('Listado de carritos');
+// Obtener carrito con productos completos (populate)
+router.get('/:cid', getCartWithProducts);
+
+// Listado de carritos
+router.get('/', async (req, res) => {
+    try {
+        const carts = await CartManager.getCarts(); 
+        res.status(200).json(carts);
+    } catch (error) {
+        console.error('Error al obtener los carritos:', error);
+        res.status(500).send('Error interno');
+    }
 });
 
 export default router;

@@ -4,7 +4,8 @@ import Cart from '../models/cart.model.js';
 export const createTicket = async (req, res) => {
     try {
         const { cartId } = req.params;
-        const userId = req.user._id;  
+        const userId = '64ba5f05edb3bfa7a8e02f3e'; 
+
         const cart = await Cart.findById(cartId).populate('products.productId');
 
         if (!cart) {
@@ -15,13 +16,13 @@ export const createTicket = async (req, res) => {
 
         const newTicket = new Ticket({
             cartId: cart._id,
-            userId,
+            userId,  
             totalAmount
         });
 
         await newTicket.save();
 
-        // Después de generar el ticket, puedes limpiar el carrito
+        // Limpiar el carrito después de generar el ticket
         cart.products = [];
         await cart.save();
 

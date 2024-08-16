@@ -9,10 +9,10 @@ class CartDTO {
             total: productItem.quantity * productItem.product.price
         }));
         this.totalAmount = this.calculateTotalAmount(cart.products);
-        this.userId = cart.userId; // Asumiendo que tienes un userId en tu modelo de carrito
+        this.userId = cart.userId;
     }
 
-    // Método para calcular el monto total del carrito
+
     calculateTotalAmount(products) {
         return products.reduce((acc, productItem) => {
             return acc + (productItem.quantity * productItem.product.price);

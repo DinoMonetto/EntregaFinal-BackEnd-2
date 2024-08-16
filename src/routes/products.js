@@ -1,6 +1,5 @@
 import express from 'express';
 import Product from '../models/product.model.js';
-import { authorizeRole } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
@@ -35,17 +34,49 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Añadir, actualizar y eliminar productos solo puede ser realizado por un administrador
-router.post('/', authorizeRole(['admin']), async (req, res) => {
-    // Lógica para añadir un producto
+// Añadir un producto
+router.post('/', async (req, res) => {
+    try {
+        const productData = req.body;
+        const newProduct = new Product(productData);
+        await newProduct.save();
+        res.status(201).json(newProduct);
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: error.message });
+    }
 });
 
-router.put('/:id', authorizeRole(['admin']), async (req, res) => {
-    // Lógica para actualizar un producto
+// Actualizar un producto
+router.put('/:id', async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const updatedData = req.body;
+        const updatedProduct = await Product.findByIdAndUpdate(productId, updatedData, { new: true });
+
+        if (!updatedProduct) {
+            return res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
+        }
+
+        res.json(updatedProduct);
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: error.message });
+    }
 });
 
-router.delete('/:id', authorizeRole(['admin']), async (req, res) => {
-    // Lógica para eliminar un producto
+// Eliminar un producto
+router.delete('/:id', async (req, res) => {
+    try {
+        const productId = req.params.id;
+        const deletedProduct = await Product.findByIdAndDelete(productId);
+
+        if (!deletedProduct) {
+            return res.status(404).json({ status: 'error', message: 'Producto no encontrado' });
+        }
+
+        res.json({ status: 'success', message: 'Producto eliminado correctamente' });
+    } catch (error) {
+        res.status(500).json({ status: 'error', message: error.message });
+    }
 });
 
 export default router;

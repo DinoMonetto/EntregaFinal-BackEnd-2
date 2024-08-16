@@ -2,8 +2,19 @@
 import CartDAO from '../dao/cart.dao.js';
 import ProductDAO from '../dao/product.dao.js';
 import CartDTO from '../dto/cart.dto.js';
+import Cart from '../models/cart.model.js';
 
 class CartRepository {
+    async createCart() {
+        const newCart = new Cart();
+        await newCart.save();
+        return newCart;
+    }
+    
+    async getCartById(cartId) {
+        return await CartDAO.getById(cartId);
+    }
+
     async addProductToCart(cartId, productId) {
         const cart = await CartDAO.getById(cartId);
         if (!cart) throw new Error('Carrito no encontrado');
