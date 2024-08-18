@@ -1,10 +1,36 @@
 import Ticket from '../models/ticket.model.js';
 import Cart from '../models/cart.model.js';
+import nodemailer from 'nodemailer';
+
+ 
+const sendEmail = async (recipient, subject, text) => {
+    const transporter = nodemailer.createTransport({
+        service: 'Gmail',  
+        auth: {
+            user: 'tuemail@gmail.com',  
+            pass: 'tucontraseña'        
+        }
+    });
+
+    const mailOptions = {
+        from: 'tuemail@gmail.com',
+        to: recipient,
+        subject: subject,
+        text: text
+    };
+
+    try {
+        await transporter.sendMail(mailOptions);
+        console.log('Correo enviado');
+    } catch (error) {
+        console.error('Error al enviar correo:', error);
+    }
+};
 
 export const createTicket = async (req, res) => {
     try {
         const { cartId } = req.params;
-        const userId = '64ba5f05edb3bfa7a8e02f3e'; 
+        const userId = '64ba5f05edb3bfa7a8e02f3e'; // ID de usuario fijo
 
         const cart = await Cart.findById(cartId).populate('products.productId');
 
@@ -22,11 +48,17 @@ export const createTicket = async (req, res) => {
 
         await newTicket.save();
 
-        // Limpiar el carrito después de generar el ticket
+         
         cart.products = [];
         await cart.save();
+ 
+        const recipientEmail = 'cliente@ejemplo.com'; 
+        const subject = 'Tu ticket está listo';
+        const text = `Hola, tu ticket ha sido generado con éxito. El ID de tu ticket es: ${newTicket._id}. Gracias por tu compra.`;
 
-        res.status(201).json({ message: 'Compra realizada con éxito', ticketId: newTicket._id });
+        await sendEmail(recipientEmail, subject, text);
+
+        res.status(201).json({ message: 'Compra realizada con éxito, correo enviado', ticketId: newTicket._id });
     } catch (error) {
         res.status(500).json({ message: 'Error al generar el ticket', error: error.message });
     }
